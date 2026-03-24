@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    color-scheme: light dark;
+    --color-primary: #4f46e5;
+    --color-primary-dark: #4338ca;
+    --color-secondary: #06b6d4;
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+  }
+
+  body {
+    @apply bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html, body {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100%;
+  }
+
+  /* Typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+
+  h1 { @apply text-4xl font-bold; }
+  h2 { @apply text-3xl font-bold; }
+  h3 { @apply text-2xl font-bold; }
+  h4 { @apply text-xl font-bold; }
+  h5 { @apply text-lg font-semibold; }
+  h6 { @apply text-base font-semibold; }
+
+  p {
+    @apply leading-relaxed text-slate-600 dark:text-slate-400;
+  }
+
+  /* Buttons */
+  button {
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-950 transition-all duration-200;
+  }
+
+  /* Links */
+  a {
+    @apply text-indigo-600 dark:text-indigo-400 hover:underline focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded;
+  }
+
+  /* Form elements */
+  input, textarea, select {
+    @apply focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-all duration-200;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2.5 bg-indigo-600 dark:bg-indigo-600 text-white rounded-xl font-semibold text-sm shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 dark:hover:bg-indigo-700 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply px-4 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl font-semibold text-sm hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2.5 text-slate-600 dark:text-slate-400 rounded-xl font-semibold text-sm hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-danger {
+    @apply px-4 py-2.5 bg-red-500/10 text-red-600 dark:text-red-400 rounded-xl font-semibold text-sm hover:bg-red-500/20 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .card {
+    @apply bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+
+  .card-elevated {
+    @apply bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md hover:shadow-lg transition-shadow duration-200;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:bg-white dark:focus:bg-slate-900 focus:border-indigo-500 transition-all duration-200;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold;
+  }
+
+  .badge-success {
+    @apply bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400;
+  }
+
+  .badge-warning {
+    @apply bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400;
+  }
+
+  .badge-danger {
+    @apply bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400;
+  }
+
+  .badge-info {
+    @apply bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400;
+  }
+
+  .stat-card {
+    @apply bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-200;
+  }
+
+  .section-title {
+    @apply text-2xl font-bold text-slate-900 dark:text-white mb-6;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent;
+  }
+}

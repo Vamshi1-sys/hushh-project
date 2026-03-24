@@ -1,0 +1,99 @@
+{
+  "users": [
+    {
+      "id": "admin-123",
+      "name": "Admin User",
+      "email": "svamshi282@gmail.com",
+      "role": "admin",
+      "status": "active",
+      "createdAt": "2026-03-24T16:40:30.714Z"
+    },
+    {
+      "id": "ambassador-demo",
+      "name": "Demo Ambassador",
+      "email": "ambassador@hushh.com",
+      "role": "ambassador",
+      "status": "active",
+      "createdAt": "2026-03-24T16:40:30.715Z"
+    },
+    {
+      "id": "student-demo",
+      "name": "Demo Student",
+      "email": "student@hushh.com",
+      "role": "student",
+      "status": "active",
+      "createdAt": "2026-03-24T16:40:30.715Z"
+    },
+    {
+      "id": "u-1774370646156",
+      "name": "okok",
+      "email": "john@gmail.com",
+      "role": "student",
+      "status": "active",
+      "createdAt": "2026-03-24T16:44:06.156Z"
+    },
+    {
+      "id": "u-1774372416934",
+      "name": "im",
+      "email": "john1@gmail.com",
+      "role": "student",
+      "status": "active",
+      "createdAt": "2026-03-24T17:13:36.934Z"
+    },
+    {
+      "id": "u-1774372613959",
+      "name": "hi",
+      "email": "john2@gmail.com",
+      "role": "student",
+      "status": "active",
+      "createdAt": "2026-03-24T17:16:53.959Z"
+    }
+  ],
+  "ambassadors": [
+    {
+      "id": "ambassador-demo",
+      "name": "Demo Ambassador",
+      "email": "ambassador@hushh.com",
+      "college": "Tech University",
+      "referralCode": "DEMO2024",
+      "signupsCount": 7,
+      "activeUsersCount": 7,
+      "score": 54,
+      "growthPercentage": 0,
+      "role": "ambassador",
+      "status": "active"
+    }
+  ],
+  "referrals": [
+    {
+      "id": "ref-demo",
+      "ambassadorId": "ambassador-demo",
+      "referredUserId": "student-demo",
+      "status": "signed_up",
+      "createdAt": "2026-03-24T16:40:30.715Z"
+    },
+    {
+      "id": "ref-1774372416934",
+      "ambassadorId": "ambassador-demo",
+      "referredUserId": "u-1774372416934",
+      "status": "signed_up",
+      "createdAt": "2026-03-24T17:13:36.934Z"
+    },
+    {
+      "id": "ref-1774372613959",
+      "ambassadorId": "ambassador-demo",
+      "referredUserId": "u-1774372613959",
+      "status": "signed_up",
+      "createdAt": "2026-03-24T17:16:53.959Z"
+    }
+  ],
+  "announcements": [
+    {
+      "id": "1",
+      "title": "Welcome to Hushh!",
+      "content": "We are excited to have you here. Start by exploring the dashboard and managing your campus ambassadors.",
+      "authorId": "admin-123",
+      "createdAt": "2026-03-24T16:40:30.715Z"
+    }
+  ]
+}
