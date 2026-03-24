@@ -35,28 +35,39 @@ export default function Login({ onLoginSuccess }: LoginProps) {
     setIsLoading(true);
     
     try {
-      const endpoint = mode === 'login' ? '/api/login' : '/api/signup';
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          name, 
-          email, 
-          password, 
-          referralCode,
+      if (mode === 'login') {
+        // Demo login
+        const demoUsers = [
+          { id: 'admin-123', name: 'Admin User', email: 'svamshi282@gmail.com', role: 'admin', status: 'active' },
+          { id: 'ambassador-demo', name: 'Demo Ambassador', email: 'ambassador@hushh.com', role: 'ambassador', status: 'active' },
+          { id: 'student-demo', name: 'Demo Student', email: 'student@hushh.com', role: 'student', status: 'active' }
+        ];
+
+        const user = demoUsers.find(u => u.email === email);
+        if (!user) {
+          throw new Error('User not found');
+        }
+
+        toast.success('Successfully logged in!');
+        onLoginSuccess(user);
+      } else {
+        // Demo signup
+        if (!name || !email || !password) {
+          throw new Error('Please fill in all fields');
+        }
+
+        const newUser = {
+          id: 'u-' + Date.now(),
+          name,
+          email,
           role: userRole,
-          college: userRole === 'ambassador' ? college : undefined
-        })
-      });
+          status: 'active',
+          createdAt: new Date().toISOString()
+        };
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Authentication failed');
+        toast.success('Account created successfully!');
+        onLoginSuccess(newUser);
       }
-
-      toast.success(mode === 'login' ? 'Successfully logged in!' : 'Account created successfully!');
-      onLoginSuccess(data.user);
     } catch (error: any) {
       console.error('Auth error:', error);
       toast.error(error.message || 'Authentication failed.');

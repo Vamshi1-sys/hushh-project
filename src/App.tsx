@@ -38,21 +38,74 @@ export default function App() {
   // Fetch initial data
   const fetchData = async () => {
     try {
-      const response = await fetch('/api/data');
-      const data = await response.json();
-      setUsers(data.users);
-      setAmbassadors(data.ambassadors);
-      setReferrals(data.referrals || []);
-      setDailyStats(data.dailyStats || []);
+      // Demo data - works without backend API
+      const demoData = {
+        users: [
+          {
+            id: "admin-123",
+            name: "Admin User",
+            email: "svamshi282@gmail.com",
+            role: "admin",
+            status: "active",
+            createdAt: new Date().toISOString()
+          },
+          {
+            id: "ambassador-demo",
+            name: "Demo Ambassador",
+            email: "ambassador@hushh.com",
+            role: "ambassador",
+            status: "active",
+            createdAt: new Date().toISOString()
+          },
+          {
+            id: "student-demo",
+            name: "Demo Student",
+            email: "student@hushh.com",
+            role: "student",
+            status: "active",
+            createdAt: new Date().toISOString()
+          }
+        ],
+        ambassadors: [
+          {
+            id: "ambassador-demo",
+            name: "Demo Ambassador",
+            email: "ambassador@hushh.com",
+            college: "Tech University",
+            referralCode: "DEMO2024",
+            signupsCount: 5,
+            activeUsersCount: 5,
+            score: 50,
+            growthPercentage: 0,
+            role: "ambassador",
+            status: "active"
+          }
+        ],
+        referrals: [
+          {
+            id: "ref-demo",
+            ambassadorId: "ambassador-demo",
+            referredUserId: "student-demo",
+            status: "signed_up",
+            createdAt: new Date().toISOString()
+          }
+        ],
+        dailyStats: generateDailyStats()
+      };
+
+      setUsers(demoData.users);
+      setAmbassadors(demoData.ambassadors);
+      setReferrals(demoData.referrals || []);
+      setDailyStats(demoData.dailyStats || []);
       
       // If logged in, update user state from fresh data
       if (user) {
-        const freshUser = data.users.find((u: User) => u.id === user.id);
+        const freshUser = demoData.users.find((u: User) => u.id === user.id);
         if (freshUser) {
           setUser(freshUser);
           setUserRole(freshUser.role);
           if (freshUser.role === 'ambassador') {
-            const amb = data.ambassadors.find((a: Ambassador) => a.id === freshUser.id);
+            const amb = demoData.ambassadors.find((a: Ambassador) => a.id === freshUser.id);
             setCurrentAmbassador(amb || null);
           }
         }
@@ -61,6 +114,28 @@ export default function App() {
       console.error("Error fetching data:", error);
     }
   };
+
+  // Generate daily stats helper
+  const generateDailyStats = (): DailyStats[] => {
+    const stats = [];
+    const today = new Date();
+    
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+      
+      const baseSignups = Math.floor(i * 0.3 + Math.random() * 5);
+      const baseActive = Math.floor(i * 0.25 + Math.random() * 4);
+      
+      stats.push({
+        id: `stat-${dateStr}`,
+        date: dateStr,
+        totalSignups: Math.max(0, baseSignups),
+        activeUsers: Math.max(0, baseActive)
+      });
+    }
+    return stats;
 
   useEffect(() => {
     // Check if there's a referral code in the URL
