@@ -1,32 +1,7 @@
 {
-  "name": "hushh-project",
   "version": 2,
   "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
+  "outputDirectory": "dist",
   "framework": "vite",
-  "env": {
-    "VITE_API_URL": {
-      "description": "API base URL"
-    }
-  },
-  "builds": [
-    {
-      "src": "server.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "dist/**",
-          "data.json",
-          "package.json"
-        ]
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "server.ts"
-    }
-  ]
+  "nodeVersion": "18.x"
 }
