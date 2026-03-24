@@ -23,7 +23,7 @@ interface LayoutProps {
 
 export default function Layout({ children, activeTab, setActiveTab, userRole, onLogout }: LayoutProps) {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -53,7 +53,8 @@ export default function Layout({ children, activeTab, setActiveTab, userRole, on
       {/* Sidebar */}
       <aside className={cn(
         "fixed left-0 top-0 h-full bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transition-all duration-300 z-50 flex flex-col",
-        isSidebarOpen ? "w-64" : "w-20"
+        "md:relative",
+        isSidebarOpen ? "w-64 md:w-64" : "w-0 md:w-20 overflow-hidden md:overflow-visible"
       )}>
         {/* Logo */}
         <div className="p-6 flex items-center gap-3 border-b border-slate-200 dark:border-slate-800">
@@ -107,11 +108,13 @@ export default function Layout({ children, activeTab, setActiveTab, userRole, on
       {/* Main Content */}
       <main className={cn(
         "transition-all duration-300 min-h-screen",
-        isSidebarOpen ? "ml-64" : "ml-20"
+        "md:ml-64",
+        isSidebarOpen && "md:ml-64",
+        !isSidebarOpen && "md:ml-20"
       )}>
         {/* Header */}
         <header className="sticky top-0 z-40 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
-          <div className="h-16 px-8 flex items-center justify-between">
+          <div className="h-16 px-4 sm:px-6 md:px-8 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button 
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -131,7 +134,7 @@ export default function Layout({ children, activeTab, setActiveTab, userRole, on
         </header>
 
         {/* Content */}
-        <div className="p-8 max-w-7xl mx-auto">
+        <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
           {children}
         </div>
       </main>
