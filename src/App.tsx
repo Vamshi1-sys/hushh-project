@@ -15,6 +15,29 @@ import GrowthGraphs from './components/GrowthGraphs';
 import { Ambassador, DailyStats, DashboardMetrics, User, UserRole, Referral } from './types';
 import { cn } from './lib/utils';
 
+// Generate daily stats for the past 30 days
+const generateDailyStats = (): DailyStats[] => {
+  const stats: DailyStats[] = [];
+  const today = new Date();
+  
+  for (let i = 29; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    
+    const baseSignups = Math.floor(i * 0.3 + Math.random() * 5);
+    const baseActive = Math.floor(baseSignups * 0.7 + Math.random() * 3);
+    
+    stats.push({
+      date: date.toISOString().split('T')[0],
+      signups: baseSignups,
+      activeUsers: Math.max(1, baseActive),
+      revenue: baseSignups * 50 + Math.random() * 500
+    });
+  }
+  
+  return stats;
+};
+
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthReady, setIsAuthReady] = useState(false);
@@ -23,9 +46,56 @@ export default function App() {
   const [userRole, setUserRole] = useState<UserRole>('user');
   const [currentAmbassador, setCurrentAmbassador] = useState<Ambassador | null>(null);
   
-  const [ambassadors, setAmbassadors] = useState<Ambassador[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
-  const [referrals, setReferrals] = useState<Referral[]>([]);
+  const [ambassadors, setAmbassadors] = useState<Ambassador[]>([
+    {
+      id: 'ambassador-demo',
+      name: 'Demo Ambassador',
+      email: 'ambassador@hushh.com',
+      college: 'St. Xavier\'s College',
+      referralCode: 'DEMO2024',
+      signupsCount: 12,
+      activeUsersCount: 8,
+      score: 120,
+      growthPercentage: 25,
+      role: 'ambassador',
+      status: 'active'
+    }
+  ]);
+  const [users, setUsers] = useState<User[]>([
+    {
+      id: 'admin-123',
+      name: 'Admin User',
+      email: 'svamshi282@gmail.com',
+      role: 'admin',
+      status: 'active',
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: 'ambassador-demo',
+      name: 'Demo Ambassador',
+      email: 'ambassador@hushh.com',
+      role: 'ambassador',
+      status: 'active',
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: 'student-demo',
+      name: 'Demo Student',
+      email: 'student@hushh.com',
+      role: 'student',
+      status: 'active',
+      createdAt: new Date().toISOString()
+    }
+  ]);
+  const [referrals, setReferrals] = useState<Referral[]>([
+    {
+      id: 'ref-001',
+      ambassadorId: 'ambassador-demo',
+      referredUserId: 'student-demo',
+      status: 'signed_up',
+      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+    }
+  ]);
   const [dailyStats, setDailyStats] = useState<DailyStats[]>([]);
   const [metrics, setMetrics] = useState<DashboardMetrics>({
     totalUsers: 0,
@@ -35,135 +105,31 @@ export default function App() {
     conversionRate: 0
   });
 
-  // Fetch initial data
-  const fetchData = async () => {
-    try {
-      // Demo data - works without backend API
-      const demoData = {
-        users: [
-          {
-            id: "admin-123",
-            name: "Admin User",
-            email: "svamshi282@gmail.com",
-            role: "admin",
-            status: "active",
-            createdAt: new Date().toISOString()
-          },
-          {
-            id: "ambassador-demo",
-            name: "Demo Ambassador",
-            email: "ambassador@hushh.com",
-            role: "ambassador",
-            status: "active",
-            createdAt: new Date().toISOString()
-          },
-          {
-            id: "student-demo",
-            name: "Demo Student",
-            email: "student@hushh.com",
-            role: "student",
-            status: "active",
-            createdAt: new Date().toISOString()
-          }
-        ],
-        ambassadors: [
-          {
-            id: "ambassador-demo",
-            name: "Demo Ambassador",
-            email: "ambassador@hushh.com",
-            college: "Tech University",
-            referralCode: "DEMO2024",
-            signupsCount: 5,
-            activeUsersCount: 5,
-            score: 50,
-            growthPercentage: 0,
-            role: "ambassador",
-            status: "active"
-          }
-        ],
-        referrals: [
-          {
-            id: "ref-demo",
-            ambassadorId: "ambassador-demo",
-            referredUserId: "student-demo",
-            status: "signed_up",
-            createdAt: new Date().toISOString()
-          }
-        ],
-        dailyStats: generateDailyStats()
-      };
-
-      setUsers(demoData.users);
-      setAmbassadors(demoData.ambassadors);
-      setReferrals(demoData.referrals || []);
-      setDailyStats(demoData.dailyStats || []);
-      
-      // If logged in, update user state from fresh data
-      if (user) {
-        const freshUser = demoData.users.find((u: User) => u.id === user.id);
-        if (freshUser) {
-          setUser(freshUser);
-          setUserRole(freshUser.role);
-          if (freshUser.role === 'ambassador') {
-            const amb = demoData.ambassadors.find((a: Ambassador) => a.id === freshUser.id);
-            setCurrentAmbassador(amb || null);
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  // Generate daily stats helper
-  const generateDailyStats = (): DailyStats[] => {
-    const stats = [];
-    const today = new Date();
-    
-    for (let i = 29; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      const dateStr = date.toISOString().split('T')[0];
-      
-      const baseSignups = Math.floor(i * 0.3 + Math.random() * 5);
-      const baseActive = Math.floor(i * 0.25 + Math.random() * 4);
-      
-      stats.push({
-        id: `stat-${dateStr}`,
-        date: dateStr,
-        totalSignups: Math.max(0, baseSignups),
-        activeUsers: Math.max(0, baseActive)
-      });
-    }
-    return stats;
-
+  // Initialize data
   useEffect(() => {
-    // Check if there's a referral code in the URL
     const params = new URLSearchParams(window.location.search);
     const ref = params.get('ref');
     
-    // If referral code present, show login page (clear any existing session)
     if (ref) {
       setUser(null);
       setUserRole('user');
       localStorage.removeItem('user');
       setIsAuthReady(true);
-      fetchData();
+      setDailyStats(generateDailyStats());
       return;
     }
     
-    // Check local storage for session
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser);
       setUser(parsedUser);
       setUserRole(parsedUser.role);
     }
+    
     setIsAuthReady(true);
-    fetchData();
+    setDailyStats(generateDailyStats());
   }, []);
 
-  // Update metrics
   useEffect(() => {
     const totalSignups = ambassadors.reduce((acc, curr) => acc + curr.signupsCount, 0);
     const activeUsers = ambassadors.reduce((acc, curr) => acc + curr.activeUsersCount, 0);
@@ -185,8 +151,9 @@ export default function App() {
     toast.success('Logged out successfully');
   };
 
-  const handleAddAmbassador = async (newAmbassador: any) => {
+  const handleAddAmbassador = (newAmbassador: any) => {
     const id = 'user-' + Date.now();
+    
     const userData: User = {
       id,
       name: newAmbassador.name,
@@ -195,129 +162,76 @@ export default function App() {
       status: newAmbassador.status || 'active',
       createdAt: new Date().toISOString()
     };
-
-    try {
-      await fetch('/api/users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData)
-      });
-      
-      if (newAmbassador.role === 'ambassador') {
-        const ambData: Ambassador = {
-          id,
-          name: newAmbassador.name,
-          email: newAmbassador.email,
-          college: newAmbassador.college || 'N/A',
-          referralCode: newAmbassador.referralCode || `REF-${Date.now()}`,
-          signupsCount: 0,
-          activeUsersCount: 0,
-          score: 0,
-          growthPercentage: 0,
-          role: 'ambassador',
-          status: 'active'
-        };
-        await fetch('/api/ambassadors', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(ambData)
-        });
-      }
-      toast.success('User added successfully!');
-      fetchData();
-    } catch (error) {
-      toast.error('Failed to add user');
+    
+    setUsers([...users, userData]);
+    
+    if (newAmbassador.role === 'ambassador') {
+      const ambData: Ambassador = {
+        id,
+        name: newAmbassador.name,
+        email: newAmbassador.email,
+        college: newAmbassador.college || 'N/A',
+        referralCode: newAmbassador.referralCode || `REF-${Date.now()}`,
+        signupsCount: 0,
+        activeUsersCount: 0,
+        score: 0,
+        growthPercentage: 0,
+        role: 'ambassador',
+        status: 'active'
+      };
+      setAmbassadors([...ambassadors, ambData]);
     }
+    
+    toast.success('User added successfully!');
   };
 
-  const handleDeleteAmbassador = async (id: string) => {
-    try {
-      await fetch(`/api/users/${id}`, { method: 'DELETE' });
-      await fetch(`/api/ambassadors/${id}`, { method: 'DELETE' });
-      toast.success('User removed successfully!');
-      fetchData();
-    } catch (error) {
-      toast.error('Failed to delete user');
-    }
+  const handleDeleteAmbassador = (id: string) => {
+    setUsers(users.filter(u => u.id !== id));
+    setAmbassadors(ambassadors.filter(a => a.id !== id));
+    setReferrals(referrals.filter(r => r.ambassadorId !== id && r.referredUserId !== id));
+    toast.success('User removed successfully!');
   };
 
-  const handleEditAmbassador = async (id: string, updatedData: any) => {
-    try {
-      await fetch(`/api/users/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedData)
-      });
-      
-      await fetch(`/api/ambassadors/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedData)
-      });
-      
-      toast.success('User updated successfully!');
-      fetchData();
-    } catch (error) {
-      toast.error('Failed to update user');
-    }
+  const handleEditAmbassador = (id: string, updatedData: any) => {
+    setUsers(users.map(u => u.id === id ? { ...u, ...updatedData } : u));
+    setAmbassadors(ambassadors.map(a => a.id === id ? { ...a, ...updatedData } : a));
+    toast.success('User updated successfully!');
   };
 
-  const handleSimulateSignup = async (ambassadorId: string) => {
+  const handleSimulateSignup = (ambassadorId: string) => {
     const id = `student-${Date.now()}`;
     const studentData = {
       id,
       name: `Demo Student ${Math.floor(Math.random() * 1000)}`,
       email: `demo${Date.now()}@example.com`,
-      password: 'password123',
-      role: 'user',
+      role: 'student',
       status: 'active',
-      createdAt: new Date().toISOString(),
-      lastLogin: new Date().toISOString()
+      createdAt: new Date().toISOString()
     };
 
-    try {
-      // 1. Create the student user
-      await fetch('/api/users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(studentData)
-      });
+    setUsers([...users, studentData]);
 
-      // 2. Create the referral record
-      const referralData = {
-        id: `ref-${Date.now()}`,
-        ambassadorId,
-        referredUserId: id,
-        status: 'completed',
-        createdAt: new Date().toISOString()
+    const referralData = {
+      id: `ref-${Date.now()}`,
+      ambassadorId,
+      referredUserId: id,
+      status: 'signed_up' as const,
+      createdAt: new Date().toISOString()
+    };
+    setReferrals([...referrals, referralData]);
+
+    const ambassador = ambassadors.find(a => a.id === ambassadorId);
+    if (ambassador) {
+      const updatedAmbassador = {
+        ...ambassador,
+        signupsCount: (ambassador.signupsCount || 0) + 1,
+        score: (ambassador.score || 0) + 10,
+        activeUsersCount: (ambassador.activeUsersCount || 0) + 1
       };
-      await fetch('/api/referrals', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(referralData)
-      });
-
-      // 3. Update the ambassador's score and count
-      const ambassador = ambassadors.find(a => a.id === ambassadorId);
-      if (ambassador) {
-        const updatedAmbassador = {
-          ...ambassador,
-          signupsCount: (ambassador.signupsCount || 0) + 1,
-          score: (ambassador.score || 0) + 10,
-          activeUsersCount: (ambassador.activeUsersCount || 0) + 1
-        };
-        await fetch(`/api/ambassadors/${ambassadorId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatedAmbassador)
-        });
-      }
-
-      toast.success('Demo signup simulated successfully!');
-      fetchData();
-    } catch (error) {
-      toast.error('Failed to simulate demo signup');
+      setAmbassadors(ambassadors.map(a => a.id === ambassadorId ? updatedAmbassador : a));
     }
+
+    toast.success('Demo signup simulated successfully!');
   };
 
   const handleLogin = (loggedInUser: User) => {
