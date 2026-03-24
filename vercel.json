@@ -4,10 +4,26 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "nodeVersion": "18.x",
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/server.ts"
+      "src": "/api/data",
+      "dest": "/api/data.ts",
+      "methods": ["GET"]
+    },
+    {
+      "src": "/api/login",
+      "dest": "/api/login.ts",
+      "methods": ["POST"]
+    },
+    {
+      "src": "/api/signup",
+      "dest": "/api/signup.ts",
+      "methods": ["POST"]
     },
     {
       "src": "/(.*)",
