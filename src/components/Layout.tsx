@@ -69,7 +69,13 @@ export default function Layout({ children, activeTab, setActiveTab, userRole, on
           {navItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => {
+                setActiveTab(item.id);
+                // Close sidebar on mobile/tablet (< 768px)
+                if (window.innerWidth < 768) {
+                  setIsSidebarOpen(false);
+                }
+              }}
               className={cn(
                 "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200",
                 activeTab === item.id 
