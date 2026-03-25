@@ -111,9 +111,17 @@ export default function App() {
     const ref = params.get('ref');
     
     if (ref) {
-      setUser(null);
-      setUserRole('user');
-      localStorage.removeItem('user');
+      // Auto-login as student for referral links
+      const demoStudent = {
+        id: 'student-demo',
+        name: 'Demo Student',
+        email: 'student@hushh.com',
+        role: 'student' as const,
+        status: 'active' as const,
+        createdAt: new Date().toISOString()
+      };
+      setUser(demoStudent);
+      setUserRole('student');
       setIsAuthReady(true);
       setDailyStats(generateDailyStats());
       return;
@@ -124,6 +132,18 @@ export default function App() {
       const parsedUser = JSON.parse(savedUser);
       setUser(parsedUser);
       setUserRole(parsedUser.role);
+    } else {
+      // Auto-login as admin when no saved user (public access)
+      const demoAdmin = {
+        id: 'admin-123',
+        name: 'Admin User',
+        email: 'svamshi282@gmail.com',
+        role: 'admin' as const,
+        status: 'active' as const,
+        createdAt: new Date().toISOString()
+      };
+      setUser(demoAdmin);
+      setUserRole('admin');
     }
     
     setIsAuthReady(true);
